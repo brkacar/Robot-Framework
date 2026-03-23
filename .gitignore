@@ -1,4 +1,4 @@
 .venv
-log.html
-output.xml
-report.html
+tests/log.html
+tests/output.xml
+tests/report.html
