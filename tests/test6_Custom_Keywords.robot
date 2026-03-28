@@ -4,12 +4,13 @@ Library    SeleniumLibrary
 Library    Collections
 Library    ../customLibraries/Shop.py
 Test Setup        Open the browser with the url
-Test Teardown    Close Browser
+#Test Teardown    Close Browser
 Resource        resource.robot
 
 *** Variables ***
 ${Error_Message_Login}    css:.alert-danger
 ${Shop_page_load}         css:.nav-link
+@{ListOfItems}            Blackberry    Nokia Edge    iphone X
 
 
 *** Test Cases ***
@@ -23,7 +24,8 @@ Validate Cards display in the shopping page
     wait until element is located    ${Shop_page_load}
     Verify card titles
     Hello World
-    Select the Card    Blackberry
+    Add Items To Card And Checkout    @{ListOfItems}
+#    Select the Card    Blackberry
 
 #Select the Form and navigate to Child window
 #    Fill the login details and Login Form    ${valid_username}    ${valid_password}
