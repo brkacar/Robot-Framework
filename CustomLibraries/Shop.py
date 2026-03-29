@@ -15,7 +15,7 @@ class Shop:
     @keyword
     def Add_Items_to_Card_and_Checkout(self, *itemsList): # * catches unpacked list as tuple
         i=1
-        #Get EbElements
+        #Get WebElements
         items=self.seleniumLib.get_webelements("css=.card-title")
         for item in items:
             if item.text in itemsList:

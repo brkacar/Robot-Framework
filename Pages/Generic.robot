@@ -22,3 +22,7 @@ Open the browser with the url
 #    Create Webdriver    Chrome
 #    Go to    ${url}
     Open Browser    ${url}    Chrome    options=add_experimental_option("detach",True)
+
+wait until element passed is located
+    [Arguments]    ${locator}
+    Wait Until Element Is Visible    ${locator}
