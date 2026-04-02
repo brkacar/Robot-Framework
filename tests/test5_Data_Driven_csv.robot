@@ -4,6 +4,7 @@ Library    SeleniumLibrary
 Library    DataDriver    file=resources/data.csv    encoding=utf_8    dialect=unix
 Test Teardown    Close Browser
 Test Template    Validate Unsuccessful Login
+Resource        ../Pages/Generic.robot
 
 *** Variables ***
 ${Error_Message_Login}    css=.alert-danger
@@ -19,11 +20,6 @@ Validate Unsuccessful Login
     Fill the login form    ${username}    ${password}
     wait until it displays error message
     verify error message is correct
-
-
-Open the browser with the url
-    Create Webdriver    Chrome
-    Go to    https://rahulshettyacademy.com/loginpagePractise/
 
 Fill the login form
     [Arguments]    ${username}    ${password}

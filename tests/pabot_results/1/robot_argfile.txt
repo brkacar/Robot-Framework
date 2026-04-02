@@ -1,0 +1,16 @@
+--test test7 PageObject.Validate Cards display in the shopping page
+--variable CALLER_ID:09ba5fc8938548698aa3fef777323557
+--variable PABOTLIBURI:127.0.0.1:8270
+--variable PABOTEXECUTIONPOOLID:1
+--variable PABOTISLASTEXECUTIONINPOOL:0
+--variable PABOTNUMBEROFPROCESSES:8
+--variable PABOTQUEUEINDEX:1
+--variable PABOTLASTLEVEL:test7 PageObject.Validate Cards display in the shopping page
+--output output.xml
+--log NONE
+--report NONE
+--xunit NONE
+--outputdir .\pabot_results\1
+--consolecolors off
+--consolemarkers off
+test7_PageObject.robot

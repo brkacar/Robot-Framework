@@ -1,0 +1,16 @@
+--test test7 PageObject.Validate Unsuccessful Login
+--variable CALLER_ID:ffd0c460f64f4b3b98c9318b78e11994
+--variable PABOTLIBURI:127.0.0.1:8270
+--variable PABOTEXECUTIONPOOLID:0
+--variable PABOTISLASTEXECUTIONINPOOL:0
+--variable PABOTNUMBEROFPROCESSES:8
+--variable PABOTQUEUEINDEX:0
+--variable PABOTLASTLEVEL:test7 PageObject.Validate Unsuccessful Login
+--output output.xml
+--log NONE
+--report NONE
+--xunit NONE
+--outputdir .\pabot_results\0
+--consolecolors off
+--consolemarkers off
+test7_PageObject.robot

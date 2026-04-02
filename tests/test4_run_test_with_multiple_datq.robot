@@ -15,13 +15,13 @@ special characters    @#$             learning
 *** Keywords ***
 Validate Unsuccessful Login
     [Arguments]    ${username}    ${password}
-    Open the browser with the url
+    Open the browser with the first url
     Fill the login form    ${username}    ${password}
     wait until it displays error message
     verify error message is correct
 
 
-Open the browser with the url
+Open the browser with the first url
     Create Webdriver    Chrome
     Go to    https://rahulshettyacademy.com/loginpagePractise/
 

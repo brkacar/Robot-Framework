@@ -4,8 +4,8 @@ Library    SeleniumLibrary
 Library    Collections
 Library    ../customLibraries/Shop.py
 Test Setup        Open the browser with the url
-#Test Teardown    Close Browser
-Resource        resource.robot
+Test Teardown    Run Keywords    Close Browser    Remove geckodriver logs
+Resource        ../Pages/Generic.robot
 
 *** Variables ***
 ${Error_Message_Login}    css:.alert-danger

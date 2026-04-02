@@ -1,0 +1,12 @@
+2026-04-01 23:51:54.887069 ==============================================================================
+2026-04-01 23:51:54.947946 test7 PageObject :: Validate the login form
+2026-04-01 23:51:54.947946 ==============================================================================
+2026-04-01 23:51:54.947946 Validate Cards display in the shopping page                           | FAIL |
+2026-04-01 23:51:54.947946 [ WARN ] exexcutable_path is being deprecated. Please use service to configure the driver's executable_path as per documentation.
+2026-04-01 23:51:54.993132 Setup failed:
+2026-04-01 23:51:54.993132 NoSuchDriverException: Message: Unable to obtain driver for firefox; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors/driver_location
+2026-04-01 23:51:54.993132 ------------------------------------------------------------------------------
+2026-04-01 23:51:54.993132 test7 PageObject :: Validate the login form                           | FAIL |
+2026-04-01 23:51:54.997155 1 test, 0 passed, 1 failed
+2026-04-01 23:51:54.997155 ==============================================================================
+2026-04-01 23:51:54.997155 Output:  C:\Users\berka\PycharmProjects\RobotFramework\tests\pabot_results\1\output.xml

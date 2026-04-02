@@ -3,7 +3,7 @@ Documentation    Validate the login form
 Library    SeleniumLibrary
 Test Setup        Open the browser with the url
 Test Teardown    Close Browser
-Resource        resource.robot
+Resource        ../Pages/Generic.robot
 
 *** Variables ***
 ${Error_Message_Login}    css:.alert-danger

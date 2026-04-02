@@ -8,13 +8,13 @@ ${Error_Message_Login}    css=.alert-danger
 
 *** Test Cases ***
 Validate Unsuccessful Login
-    Open the browser with the url
+    Open the browser with the first url
     Fill the login form
     wait until it displays error message
     verify error message is correct
 
 *** Keywords ***
-Open the browser with the url
+Open the browser with the first url
     Create Webdriver    Chrome
     Go to    https://rahulshettyacademy.com/loginpagePractise/
 

@@ -1,0 +1,11 @@
+==============================================================================
+test7 PageObject :: Validate the login form
+==============================================================================
+Select the Form and navigate to Child window                          | FAIL |
+Setup failed:
+NoSuchDriverException: Message: Unable to obtain driver for firefox; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors/driver_location
+------------------------------------------------------------------------------
+test7 PageObject :: Validate the login form                           | FAIL |
+1 test, 0 passed, 1 failed
+==============================================================================
+Output:  C:\Users\berka\PycharmProjects\RobotFramework\tests\pabot_results\2\output.xml

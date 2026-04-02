@@ -21,3 +21,6 @@ class Shop:
             if item.text in itemsList:
                 self.seleniumLib.click_button("(//*[ @class='card-footer'])["+str(i)+"]/button")
             i=i+1
+
+        self.seleniumLib.click_link("css:li.active a")
+

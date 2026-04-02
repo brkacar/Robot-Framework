@@ -5,7 +5,7 @@ Library    String
 Library    Collections
 Test Setup        Open the browser with the url
 Test Teardown    Close Browser
-Resource        resource.robot
+Resource        ../Pages/Generic.robot
 
 *** Variables ***
 ${Error_Message_Login}    css:.alert-danger
@@ -13,6 +13,7 @@ ${Error_Message_Login}    css:.alert-danger
 
 *** Test Cases ***
 Validate Child window functionality
+    [Tags]    smoke
     Select the child window link
     Verify the user switched to child window
     Grab the email in the child window
