@@ -18,7 +18,7 @@ Work with dictionary
 
 Add Book into Library Database
     [Tags]    API
-    &{req_body}=    Create Dictionary    name=${book_name}    isbn=499    aisle=13913    author=BerkAcar
+    &{req_body}=    Create Dictionary    name=${book_name}    isbn=490    aisle=13913    author=BerkAcar
     ${response}=    POST      ${base_url}/Library/Addbook.php    json=${req_body}    expected_status=200
     log    ${response.json()}
     Dictionary Should Contain Key    ${response.json()}    ID
