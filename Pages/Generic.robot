@@ -33,7 +33,7 @@ wait until element passed is located
     Wait Until Element Is Visible    ${locator}
 
 Remove geckodriver logs
-    @{files} =    List Files In Directory    C:/Users/berka/PycharmProjects/RobotFramework/tests    *geckodriver*.log
+    @{files} =    List Files In Directory    C:/Users/berka/PycharmProjects/RobotFramework    *geckodriver*.log
     FOR    ${file}    IN    @{files}
         Run Keyword And Ignore Error    Remove File    ${file}
     END
