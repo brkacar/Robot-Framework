@@ -20,10 +20,10 @@ ${browser}             chrome
 
 *** Keywords ***
 
-Open the browser with the Mortgage payment url
-#    Create Webdriver    Chrome
-#    Go to    ${url}
-    Open Browser    ${url}    Chrome    options=add_experimental_option("detach",True)
+#Open the browser with the Mortgage payment url
+##    Create Webdriver    Chrome
+##    Go to    ${url}
+#    Open Browser    ${url}    ${browser}    options=add_experimental_option("detach",True)
 
 Open the browser with the url
     Open Browser    ${url}    ${browser}

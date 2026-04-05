@@ -1,0 +1,7 @@
+robotframework>=7.0
+robotframework-seleniumlibrary>=6.3.0
+robotframework-requests>=0.9.7
+robotframework-pabot>=2.18.0
+webdrivermanager>=0.10.0
+selenium>=4.0.0
+requests>=2.31.0
