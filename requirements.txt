@@ -6,3 +6,4 @@ robotframework-datadriver>=1.8.0
 selenium>=4.0.0
 requests>=2.31.0
 webdrivermanager>=0.10.0
+allure-robotframework

@@ -1,4 +1,4 @@
-name: Robot Framework Tests
+name: Robot Framework Tests + Allure
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
   actions: read
@@ -16,6 +16,9 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    outputs:
+      api_exit_code: ${{ steps.api_tests.outputs.exit_code }}
+      ui_exit_code: ${{ steps.ui_tests.outputs.exit_code }}
 
     steps:
       - name: Checkout repository
@@ -26,6 +29,12 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
 
       - name: Install dependencies
         run: |
@@ -38,18 +47,40 @@ jobs:
       - name: Install ChromeDriver
         uses: nanasess/setup-chromedriver@v2
 
-      - name: Run API tests
+      - name: Show versions
         run: |
+          python --version
+          python -c "import robot; print(robot.__version__)"
+          google-chrome --version
+          chromedriver --version
+          java -version
+
+      - name: Run API tests with Allure listener
+        id: api_tests
+        continue-on-error: true
+        run: |
+          set +e
           robot --outputdir results/api \
+                --listener allure_robotframework \
                 --include api \
                 tests/
+          EXIT_CODE=$?
+          echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
+          exit 0
 
-      - name: Run UI tests
+      - name: Run UI tests with Allure listener
+        id: ui_tests
+        continue-on-error: true
         run: |
+          set +e
           robot --outputdir results/ui \
+                --listener allure_robotframework \
                 --variable BROWSER:headlesschrome \
                 --exclude api \
                 tests/
+          EXIT_CODE=$?
+          echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
+          exit 0
 
       - name: Merge Robot outputs
         if: always()
@@ -57,7 +88,7 @@ jobs:
           rebot --output results/output.xml \
                 --log results/log.html \
                 --report results/report.html \
-                results/api/output.xml results/ui/output.xml
+                results/api/output.xml results/ui/output.xml || true
 
       - name: Upload Robot results artifact
         if: always()
@@ -67,47 +98,57 @@ jobs:
           path: results/
           retention-days: 14
 
-      - name: Upload Pages artifact
+      - name: Upload Allure raw results artifact
         if: always()
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          path: results
+          name: allure-results
+          path: allure-results/
+          retention-days: 14
 
-  publish-report:
-    if: always()
-    needs: test
-    runs-on: ubuntu-latest
-    outputs:
-      page_url: ${{ steps.deployment.outputs.page_url }}
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-
-  summary:
-    if: always()
-    needs: [test, publish-report]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
+      - name: Load Allure history
+        if: always()
+        continue-on-error: true
         uses: actions/checkout@v4
-
-      - name: Download Robot results artifact
-        uses: actions/download-artifact@v4
         with:
-          name: robot-results
-          path: results
+          ref: gh-pages
+          path: gh-pages
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Build Allure report
+        if: always()
+        uses: simple-elf/allure-report-action@v1.7
         with:
-          python-version: '3.11'
+          gh_pages: gh-pages
+          allure_history: allure-history
+          allure_results: allure-results
 
-      - name: Generate Job Summary with clickable failed tests
-        env:
-          ROBOT_REPORT_BASE_URL: ${{ needs.publish-report.outputs.page_url }}
+      - name: Publish Allure report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
+
+      - name: Add Allure link to job summary
+        if: always()
         run: |
-          python .github/scripts/robot_summary.py
+          echo "## Allure Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- [Open latest Allure report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/)" >> $GITHUB_STEP_SUMMARY
+          echo "- API test exit code: ${{ steps.api_tests.outputs.exit_code }}" >> $GITHUB_STEP_SUMMARY
+          echo "- UI test exit code: ${{ steps.ui_tests.outputs.exit_code }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Fail job if tests failed
+        if: always()
+        run: |
+          API_EXIT="${{ steps.api_tests.outputs.exit_code }}"
+          UI_EXIT="${{ steps.ui_tests.outputs.exit_code }}"
+
+          echo "API exit code: $API_EXIT"
+          echo "UI exit code: $UI_EXIT"
+
+          if [ "$API_EXIT" != "0" ] || [ "$UI_EXIT" != "0" ]; then
+            echo "One or more test suites failed."
+            exit 1
+          fi
