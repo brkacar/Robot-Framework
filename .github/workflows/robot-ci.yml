@@ -55,6 +55,10 @@ jobs:
           chromedriver --version
           java -version
 
+      - name: Ensure allure-results directory exists
+        if: always()
+        run: mkdir -p allure-results
+
       - name: Run API tests with Allure listener
         id: api_tests
         continue-on-error: true
@@ -116,7 +120,8 @@ jobs:
 
       - name: Build Allure report
         if: always()
-        uses: simple-elf/allure-report-action@v1.7
+        continue-on-error: true
+        uses: simple-elf/allure-report-action@v1.9
         with:
           gh_pages: gh-pages
           allure_history: allure-history
@@ -124,20 +129,19 @@ jobs:
 
       - name: Publish Allure report to GitHub Pages
         if: always()
+        continue-on-error: true
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-history
 
-      - name: Add Allure link to job summary
+      - name: Generate Job Summary
         if: always()
+        env:
+          ALLURE_REPORT_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
         run: |
-          echo "## Allure Report" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- [Open latest Allure report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/)" >> $GITHUB_STEP_SUMMARY
-          echo "- API test exit code: ${{ steps.api_tests.outputs.exit_code }}" >> $GITHUB_STEP_SUMMARY
-          echo "- UI test exit code: ${{ steps.ui_tests.outputs.exit_code }}" >> $GITHUB_STEP_SUMMARY
+          python .github/scripts/robot_summary.py
 
       - name: Fail job if tests failed
         if: always()
