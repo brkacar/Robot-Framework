@@ -1,4 +1,4 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","994","Get the book details that were added","","2026-04-05","passed","2026-04-05","test8 API","Tests","",""
-"","823","Add Book into Library Databasegit","","2026-04-05","passed","2026-04-05","test8 API","Tests","",""
-"","735","Delete the book from db","","2026-04-05","passed","2026-04-05","test8 API","Tests","",""
+"","960","Add Book into Library Databasegit","","2026-04-05","passed","2026-04-05","test8 API","Tests","",""
+"","826","Get the book details that were added","","2026-04-05","passed","2026-04-05","test8 API","Tests","",""
+"","748","Delete the book from db","","2026-04-05","passed","2026-04-05","test8 API","Tests","",""
