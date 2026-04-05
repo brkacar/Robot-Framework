@@ -16,7 +16,6 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -44,6 +43,10 @@ jobs:
       - name: Install ChromeDriver
         uses: nanasess/setup-chromedriver@v2
 
+      - name: Install Allure CLI
+        run: |
+          npm install -g allure-commandline --save-dev
+
       - name: Show versions
         run: |
           python --version
@@ -51,6 +54,7 @@ jobs:
           google-chrome --version
           chromedriver --version
           java -version
+          allure --version
 
       - name: Ensure allure-results directory exists
         run: mkdir -p allure-results
@@ -61,9 +65,9 @@ jobs:
         run: |
           set +e
           robot --outputdir results/api \
-                --listener allure_robotframework:allure-results \
-                --include api \
-                tests/
+            --listener allure_robotframework:allure-results \
+            --include api \
+            tests/
           EXIT_CODE=$?
           echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
           exit 0
@@ -74,10 +78,10 @@ jobs:
         run: |
           set +e
           robot --outputdir results/ui \
-                --listener allure_robotframework:allure-results \
-                --variable BROWSER:headlesschrome \
-                --exclude api \
-                tests/
+            --listener allure_robotframework:allure-results \
+            --variable BROWSER:headlesschrome \
+            --exclude api \
+            tests/
           EXIT_CODE=$?
           echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
           exit 0
@@ -86,9 +90,9 @@ jobs:
         if: always()
         run: |
           rebot --output results/output.xml \
-                --log results/log.html \
-                --report results/report.html \
-                results/api/output.xml results/ui/output.xml || true
+            --log results/log.html \
+            --report results/report.html \
+            results/api/output.xml results/ui/output.xml || true
 
       - name: Upload Robot results artifact
         if: always()
@@ -106,6 +110,13 @@ jobs:
           path: allure-results/
           retention-days: 14
 
+      - name: Generate Job Summary
+        if: always()
+        env:
+          ALLURE_REPORT_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+        run: |
+          python .github/scripts/robot_summary.py
+
       - name: Load Allure history
         if: always()
         continue-on-error: true
@@ -117,11 +128,12 @@ jobs:
       - name: Build Allure report
         if: always()
         continue-on-error: true
-        uses: simple-elf/allure-report-action@v1.9
-        with:
-          gh_pages: gh-pages
-          allure_history: allure-history
-          allure_results: allure-results
+        run: |
+          mkdir -p allure-history
+          if [ -d "gh-pages/" ]; then
+            cp -r gh-pages/. allure-history/ 2>/dev/null || true
+          fi
+          allure generate allure-results --clean -o allure-history || true
 
       - name: Publish Allure report to GitHub Pages
         if: always()
@@ -132,13 +144,6 @@ jobs:
           publish_branch: gh-pages
           publish_dir: allure-history
 
-      - name: Generate Job Summary
-        if: always()
-        env:
-          ALLURE_REPORT_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
-        run: |
-          python .github/scripts/robot_summary.py
-
       - name: Fail job if tests failed
         if: always()
         run: |
@@ -146,10 +151,8 @@ jobs:
           UI_EXIT="${{ steps.ui_tests.outputs.exit_code }}"
           API_EXIT="${API_EXIT:-0}"
           UI_EXIT="${UI_EXIT:-0}"
-
           echo "API exit code: $API_EXIT"
           echo "UI exit code: $UI_EXIT"
-
           if [ "$API_EXIT" != "0" ] || [ "$UI_EXIT" != "0" ]; then
             echo "One or more test suites failed."
             exit 1
