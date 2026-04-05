@@ -9,24 +9,19 @@ class Shop:
 
     @keyword("Add Items To Card And Checkout")
     def Add_Items_to_Card_and_Checkout(self, *itemsList):
-        # Get WebElements
+        # Get WebElements and add matching items to cart
         i = 1
-        items = self.seleniumLib.get_webelements(" css:.card-title")
+        items = self.seleniumLib.get_webelements("css:.card-title")
         for item in items:
             if item.text in itemsList:
                 self.seleniumLib.click_button("xpath:(//*[@class='card-footer'])["+str(i)+"]/button")
 
             i = i + 1
 
-        self.seleniumLib.capture_page_screenshot()
-        cart_locator = "//a[contains(@href,'checkout') or contains(@href,'cart') or contains(.,'Checkout')]"
-        self.seleniumLib.wait_until_element_is_visible(cart_locator, "10s")
-        self.seleniumLib.wait_until_page_contains_element(cart_locator, "10s")
-
+        # Click the cart icon (img with alt='Cart') to proceed to checkout
+        cart_locator = "css:img[alt='Cart']"
+        self.seleniumLib.wait_until_element_is_visible(cart_locator, "15s")
         self.seleniumLib.scroll_element_into_view(cart_locator)
-        self.seleniumLib.capture_page_screenshot()
         self.builtin.wait_until_keyword_succeeds(
             "15s", "2s", "Click Element", cart_locator
         )
-
-        self.seleniumLib.capture_page_screenshot("after-checkout-click.png")
