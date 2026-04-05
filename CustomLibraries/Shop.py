@@ -17,5 +17,5 @@ class Shop:
                 self.seleniumLib.click_button("xpath:(//*[@class='card-footer'])["+str(i)+"]/button")
 
             i = i + 1
-
+        self.seleniumLib.thread.sleep(200)
         self.seleniumLib.click_link("css:li.active a")
