@@ -7,6 +7,12 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  actions: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -32,87 +38,76 @@ jobs:
       - name: Install ChromeDriver
         uses: nanasess/setup-chromedriver@v2
 
-      - name: Show versions
-        run: |
-          python --version
-          python -c "import robot; print(robot.__version__)"
-          google-chrome --version
-          chromedriver --version
-
       - name: Run API tests
-        continue-on-error: true
         run: |
           robot --outputdir results/api \
-            --include api \
-            tests/
+                --include api \
+                tests/
 
       - name: Run UI tests
-        continue-on-error: true
         run: |
           robot --outputdir results/ui \
-            --variable BROWSER:headlesschrome \
-            --exclude api \
-            tests/
+                --variable BROWSER:headlesschrome \
+                --exclude api \
+                tests/
 
-      - name: Publish Job Summary
+      - name: Merge Robot outputs
         if: always()
         run: |
-          python - <<'EOF'
-          import xml.etree.ElementTree as ET
-          import os, glob
+          rebot --output results/output.xml \
+                --log results/log.html \
+                --report results/report.html \
+                results/api/output.xml results/ui/output.xml
 
-          summary = os.environ['GITHUB_STEP_SUMMARY']
-
-          def parse_output(xml_path, suite_label):
-              try:
-                  tree = ET.parse(xml_path)
-                  root = tree.getroot()
-                  stats = root.find('.//total/stat')
-                  if stats is None:
-                      return f"### {suite_label}\n> No statistics found in output.xml\n"
-                  passed = int(stats.get('pass', 0))
-                  failed = int(stats.get('fail', 0))
-                  skipped = int(stats.get('skip', 0))
-                  total = passed + failed + skipped
-                  status = '✅ All Passed' if failed == 0 else '❌ Some Failed'
-                  lines = [
-                      f"### {suite_label} — {status}",
-                      "",
-                      "| Result | Count |",
-                      "| --- | --- |",
-                      f"| ✅ Passed | {passed} |",
-                      f"| ❌ Failed | {failed} |",
-                      f"| ⏭️ Skipped | {skipped} |",
-                      f"| 🔢 Total | {total} |",
-                      "",
-                  ]
-                  # list failed tests
-                  failed_tests = root.findall('.//test[@status="FAIL"]') or [t for t in root.findall('.//test') if t.find('status') is not None and t.find('status').get('status') == 'FAIL']
-                  if failed_tests:
-                      lines.append("<details><summary>Failed tests</summary>\n")
-                      for t in failed_tests:
-                          name = t.get('name', 'unknown')
-                          msg_el = t.find('.//msg') or t.find('.//status')
-                          msg = msg_el.text if msg_el is not None else ''
-                          lines.append(f"- **{name}**: {msg}")
-                      lines.append("\n</details>\n")
-                  return '\n'.join(lines)
-              except Exception as e:
-                  return f"### {suite_label}\n> Could not parse output.xml: {e}\n"
-
-          with open(summary, 'a') as f:
-              f.write('# 🤖 Robot Framework Test Results\n\n')
-              for xml_file, label in [('results/api/output.xml', '🌐 API Tests'), ('results/ui/output.xml', '🖥️ UI Tests')]:
-                  if os.path.exists(xml_file):
-                      f.write(parse_output(xml_file, label) + '\n')
-                  else:
-                      f.write(f'### {label}\n> output.xml not found — tests may not have run.\n\n')
-          EOF
-
-      - name: Upload Robot results
+      - name: Upload Robot results artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: robot-results
           path: results/
           retention-days: 14
+
+      - name: Upload Pages artifact
+        if: always()
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: results
+
+  publish-report:
+    if: always()
+    needs: test
+    runs-on: ubuntu-latest
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  summary:
+    if: always()
+    needs: [test, publish-report]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Robot results artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: robot-results
+          path: results
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate Job Summary with clickable failed tests
+        env:
+          ROBOT_REPORT_BASE_URL: ${{ needs.publish-report.outputs.page_url }}
+        run: |
+          python .github/scripts/robot_summary.py
