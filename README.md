@@ -48,6 +48,7 @@ Robot-Framework/
     test7_PageObject.robot
     test8_API.robot
   pabot_results/                # Top-level pabot results
+
   README.md
 ```
 
@@ -117,12 +118,6 @@ Parallel results are collected in `pabot_results/`.
 robot --variable BROWSER:firefox tests/
 ```
 
-### Use the Python runner script
-
-```bash
-python main.py
-```
-
 ## Reports
 
 After each run, Robot Framework generates reports in the working directory:
@@ -134,8 +129,8 @@ After each run, Robot Framework generates reports in the working directory:
 Open them in any browser:
 
 ```bash
-start report.html   # Windows
-open report.html    # macOS/Linux
+start report.html    # Windows
+open report.html     # macOS/Linux
 ```
 
 ## Page Object Model
