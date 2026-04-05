@@ -5,7 +5,8 @@ Test Teardown    Close Browser
 
 *** Variables ***
 ${Error_Message_Login}    css=.alert-danger
-${browser}             chrome
+${browser}                chrome
+${url}                    https://rahulshettyacademy.com/loginpagePractise/
 
 *** Test Cases ***
 Validate Unsuccessful Login
@@ -16,8 +17,7 @@ Validate Unsuccessful Login
 
 *** Keywords ***
 Open the browser with the first url
-    Create Webdriver    ${browser}
-    Go to    https://rahulshettyacademy.com/loginpagePractise/
+    Open Browser    ${url}    ${browser}
 
 Fill the login form
     Input Text    id=username    bacar

@@ -33,9 +33,13 @@ wait until element passed is located
     Wait Until Element Is Visible    ${locator}
 
 Remove geckodriver logs
-    @{files} =    List Files In Directory    C:/Users/berka/PycharmProjects/RobotFramework    *geckodriver*.log
-    FOR    ${file}    IN    @{files}
-        Run Keyword And Ignore Error    Remove File    ${file}
+    ${status}    ${files}=    Run Keyword And Ignore Error
+    ...    List Files In Directory    .    pattern=*geckodriver*.log
+
+    IF    '${status}' == 'PASS'
+        FOR    ${file}    IN    @{files}
+            Run Keyword And Ignore Error    Remove File    ${file}
+        END
     END
 
 Close Popup With Retry

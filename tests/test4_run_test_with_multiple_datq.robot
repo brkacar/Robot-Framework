@@ -6,6 +6,8 @@ Test Template    Validate Unsuccessful Login
 
 *** Variables ***
 ${Error_Message_Login}    css=.alert-danger
+${browser}                chrome
+${url}                    https://rahulshettyacademy.com/loginpagePractise/
 
 *** Test Cases ***    username        password
 Invalid username      dasd            learning
@@ -22,8 +24,7 @@ Validate Unsuccessful Login
 
 
 Open the browser with the first url
-    Create Webdriver    Chrome
-    Go to    https://rahulshettyacademy.com/loginpagePractise/
+    Open Browser    ${url}    ${browser}
 
 Fill the login form
     [Arguments]    ${username}    ${password}

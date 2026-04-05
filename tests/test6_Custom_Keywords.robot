@@ -23,7 +23,6 @@ Validate Cards display in the shopping page
     Fill The Login Form    ${valid_username}    ${valid_password}
     wait until element is located    ${Shop_page_load}
     Verify card titles
-    Hello World
     Add Items To Card And Checkout    @{ListOfItems}
 #    Select the Card    Blackberry
 
