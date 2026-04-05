@@ -54,6 +54,61 @@ jobs:
             --exclude api \
             tests/
 
+      - name: Publish Job Summary
+        if: always()
+        run: |
+          python - <<'EOF'
+          import xml.etree.ElementTree as ET
+          import os, glob
+
+          summary = os.environ['GITHUB_STEP_SUMMARY']
+
+          def parse_output(xml_path, suite_label):
+              try:
+                  tree = ET.parse(xml_path)
+                  root = tree.getroot()
+                  stats = root.find('.//total/stat')
+                  if stats is None:
+                      return f"### {suite_label}\n> No statistics found in output.xml\n"
+                  passed = int(stats.get('pass', 0))
+                  failed = int(stats.get('fail', 0))
+                  skipped = int(stats.get('skip', 0))
+                  total = passed + failed + skipped
+                  status = '✅ All Passed' if failed == 0 else '❌ Some Failed'
+                  lines = [
+                      f"### {suite_label} — {status}",
+                      "",
+                      "| Result | Count |",
+                      "| --- | --- |",
+                      f"| ✅ Passed | {passed} |",
+                      f"| ❌ Failed | {failed} |",
+                      f"| ⏭️ Skipped | {skipped} |",
+                      f"| 🔢 Total | {total} |",
+                      "",
+                  ]
+                  # list failed tests
+                  failed_tests = root.findall('.//test[@status="FAIL"]') or [t for t in root.findall('.//test') if t.find('status') is not None and t.find('status').get('status') == 'FAIL']
+                  if failed_tests:
+                      lines.append("<details><summary>Failed tests</summary>\n")
+                      for t in failed_tests:
+                          name = t.get('name', 'unknown')
+                          msg_el = t.find('.//msg') or t.find('.//status')
+                          msg = msg_el.text if msg_el is not None else ''
+                          lines.append(f"- **{name}**: {msg}")
+                      lines.append("\n</details>\n")
+                  return '\n'.join(lines)
+              except Exception as e:
+                  return f"### {suite_label}\n> Could not parse output.xml: {e}\n"
+
+          with open(summary, 'a') as f:
+              f.write('# 🤖 Robot Framework Test Results\n\n')
+              for xml_file, label in [('results/api/output.xml', '🌐 API Tests'), ('results/ui/output.xml', '🖥️ UI Tests')]:
+                  if os.path.exists(xml_file):
+                      f.write(parse_output(xml_file, label) + '\n')
+                  else:
+                      f.write(f'### {label}\n> output.xml not found — tests may not have run.\n\n')
+          EOF
+
       - name: Upload Robot results
         if: always()
         uses: actions/upload-artifact@v4
