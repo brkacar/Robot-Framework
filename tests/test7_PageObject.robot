@@ -2,7 +2,7 @@
 Documentation    Validate the login form
 Library    SeleniumLibrary
 Library    Collections
-Library    ../customLibraries/Shop.py
+Library    ../CustomLibraries/Shop.py
 Test Setup        Open the browser with the url
 Test Teardown    Run Keywords    Close Browser    Remove geckodriver logs
 Resource        ../Pages/Generic.robot
