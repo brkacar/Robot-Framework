@@ -28,3 +28,5 @@ class Shop:
         self.builtin.wait_until_keyword_succeeds(
             "15s", "2s", "Click Element", cart_locator
         )
+
+        self.seleniumLib.capture_page_screenshot("after-checkout-click.png")

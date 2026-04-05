@@ -35,8 +35,7 @@ Fill the login details and Login Form
     Input Password    id:password    ${password}
     Click Element    css:input[value='user']
     Wait Until Element Is Visible    id:okayBtn
-    Click Button    id:okayBtn
-    Wait Until Element Is Not Visible    id:okayBtn
+    Close Popup With Retry    id:okayBtn
     Select From List By Value    css:select.form-control    teach
     Select Checkbox    terms
     Checkbox Should Be Selected    terms
