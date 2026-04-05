@@ -18,11 +18,13 @@ class Shop:
 
             i = i + 1
 
+        self.seleniumLib.capture_page_screenshot()
         cart_locator = "//a[contains(@href,'checkout') or contains(@href,'cart') or contains(.,'Checkout')]"
         self.seleniumLib.wait_until_element_is_visible(cart_locator, "10s")
         self.seleniumLib.wait_until_page_contains_element(cart_locator, "10s")
 
         self.seleniumLib.scroll_element_into_view(cart_locator)
+        self.seleniumLib.capture_page_screenshot()
         self.builtin.wait_until_keyword_succeeds(
             "15s", "2s", "Click Element", cart_locator
         )
