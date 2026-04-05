@@ -17,5 +17,12 @@ class Shop:
                 self.seleniumLib.click_button("xpath:(//*[@class='card-footer'])["+str(i)+"]/button")
 
             i = i + 1
-        self.seleniumLib.thread.sleep(200)
-        self.seleniumLib.click_link("css:li.active a")
+
+        cart_locator = "css:li.active a"
+        self.seleniumLib.wait_until_element_is_visible(cart_locator, "10s")
+        self.seleniumLib.wait_until_page_contains_element(cart_locator, "10s")
+
+        self.seleniumLib.scroll_element_into_view(cart_locator)
+        self.builtin.wait_until_keyword_succeeds(
+            "15s", "2s", "Click Element", cart_locator
+        )
