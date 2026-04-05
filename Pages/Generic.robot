@@ -27,6 +27,8 @@ ${browser}             chrome
 
 Open the browser with the url
     Open Browser    ${url}    ${browser}
+    Maximize Browser Window
+    Set Screenshot Directory    ${EXECDIR}${/}results${/}screenshots
 
 wait until element passed is located
     [Arguments]    ${locator}

@@ -72,16 +72,16 @@ jobs:
           echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
           exit 0
 
-      - name: Run UI tests
+      - name: Run UI tests with Allure listener
         id: ui_tests
         continue-on-error: true
         run: |
           set +e
           robot --outputdir results/ui \
-            --listener allure_robotframework:allure-results \
-            --variable BROWSER:headlesschrome \
-            --exclude api \
-            tests/
+                --listener allure_robotframework \
+                --variable BROWSER:headlesschrome \
+                --exclude api \
+                tests/
           EXIT_CODE=$?
           echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
           exit 0
