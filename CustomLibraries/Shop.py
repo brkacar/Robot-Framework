@@ -18,7 +18,7 @@ class Shop:
 
             i = i + 1
 
-        cart_locator = "css:li.active a"
+        cart_locator = "//a[contains(@href,'checkout') or contains(@href,'cart') or contains(.,'Checkout')]"
         self.seleniumLib.wait_until_element_is_visible(cart_locator, "10s")
         self.seleniumLib.wait_until_page_contains_element(cart_locator, "10s")
 
