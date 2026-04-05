@@ -35,7 +35,7 @@ jobs:
       - name: Show versions
         run: |
           python --version
-          robot --version
+          python -c "import robot; print(robot.__version__)"
           google-chrome --version
           chromedriver --version
 
