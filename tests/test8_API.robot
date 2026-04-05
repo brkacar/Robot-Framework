@@ -16,7 +16,7 @@ Work with dictionary
     ${l}=    Get From Dictionary    ${data}    lang
     log    ${l}
 
-Add Book into Library Database
+Add Book into Library Databasegit
     [Tags]    API
     &{req_body}=    Create Dictionary    name=${book_name}    isbn=490    aisle=13913    author=BerkAcar
     ${response}=    POST      ${base_url}/Library/Addbook.php    json=${req_body}    expected_status=200

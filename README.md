@@ -12,7 +12,7 @@ A comprehensive Robot Framework automation project covering UI (web) testing, AP
 - **Parallel execution** with `pabot` (results stored in `pabot_results/`).
 - **Tag-based filtering** to run specific test groups from the CLI.
 - **Child window handling**, functional flows, and custom keyword composition.
-- Helper runner script via `main.py`.
+- Helper runner script via `CustomLibraries/Shop.py`.
 
 ## Tech stack
 
@@ -48,7 +48,6 @@ Robot-Framework/
     test7_PageObject.robot
     test8_API.robot
   pabot_results/                # Top-level pabot results
-  main.py                       # Python helper runner script
   README.md
 ```
 
