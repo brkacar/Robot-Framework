@@ -37,3 +37,16 @@ Remove geckodriver logs
     FOR    ${file}    IN    @{files}
         Run Keyword And Ignore Error    Remove File    ${file}
     END
+
+Close Popup With Retry
+    [Arguments]    ${okay_btn}
+    FOR    ${i}    IN RANGE    3
+        Run Keyword And Ignore Error    Click Element    ${okay_btn}
+        ${closed}=    Run Keyword And Return Status
+        ...    Wait Until Element Is Not Visible    ${okay_btn}    2s
+        IF    ${closed}
+            RETURN
+        END
+        Sleep    1s
+    END
+    Fail    Popup was still visible after 3 attempts
