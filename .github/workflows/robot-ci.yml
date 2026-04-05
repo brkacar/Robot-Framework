@@ -16,9 +16,6 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    outputs:
-      api_exit_code: ${{ steps.api_tests.outputs.exit_code }}
-      ui_exit_code: ${{ steps.ui_tests.outputs.exit_code }}
 
     steps:
       - name: Checkout repository
@@ -56,29 +53,28 @@ jobs:
           java -version
 
       - name: Ensure allure-results directory exists
-        if: always()
         run: mkdir -p allure-results
 
-      - name: Run API tests with Allure listener
+      - name: Run API tests
         id: api_tests
         continue-on-error: true
         run: |
           set +e
           robot --outputdir results/api \
-                --listener allure_robotframework \
+                --listener allure_robotframework:allure-results \
                 --include api \
                 tests/
           EXIT_CODE=$?
           echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
           exit 0
 
-      - name: Run UI tests with Allure listener
+      - name: Run UI tests
         id: ui_tests
         continue-on-error: true
         run: |
           set +e
           robot --outputdir results/ui \
-                --listener allure_robotframework \
+                --listener allure_robotframework:allure-results \
                 --variable BROWSER:headlesschrome \
                 --exclude api \
                 tests/
@@ -148,6 +144,8 @@ jobs:
         run: |
           API_EXIT="${{ steps.api_tests.outputs.exit_code }}"
           UI_EXIT="${{ steps.ui_tests.outputs.exit_code }}"
+          API_EXIT="${API_EXIT:-0}"
+          UI_EXIT="${UI_EXIT:-0}"
 
           echo "API exit code: $API_EXIT"
           echo "UI exit code: $UI_EXIT"
