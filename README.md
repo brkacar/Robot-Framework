@@ -13,6 +13,9 @@ A comprehensive Robot Framework automation project covering UI (web) testing, AP
 - **Tag-based filtering** to run specific test groups from the CLI.
 - **Child window handling**, functional flows, and custom keyword composition.
 - Helper runner script via `CustomLibraries/Shop.py`.
+- **GitHub Actions CI** for automated test execution on every push and pull request.
+- **Allure report** published to GitHub Pages with trend charts and step-level details.
+- **Screenshots on failure** automatically captured and attached to the report.
 
 ## Tech stack
 
@@ -159,3 +162,21 @@ Library    ../CustomLibraries/MyLibrary.py
 - Practice UI automation with SeleniumLibrary using POM and data-driven approaches.
 - Explore API test design with RequestsLibrary.
 - Use as a reference for parallel test execution with pabot in CI pipelines.
+
+## GitHub Actions CI
+
+Tests run automatically on every push and pull request via GitHub Actions. The workflow installs all dependencies, executes the full Robot Framework suite, captures screenshots for any failed UI tests, and uploads the standard Robot reports (`log.html`, `report.html`, `output.xml`) as run artifacts.
+
+If some tests fail but the pipeline itself completes successfully, the workflow still finishes and produces all artifacts, so failures can be reviewed without rerunning the suite locally.
+
+## Allure report
+
+An Allure report is generated in CI on every run and published to **GitHub Pages**. It provides a visual, trend-aware view of test results across runs, making it easy to track pass/fail history and inspect individual test steps directly from the browser.
+
+The latest report is always available at:
+
+👉 https://brkacar.github.io/Robot-Framework
+
+## Screenshots for failed tests
+
+Failed UI tests automatically capture a browser screenshot at teardown. Screenshots are attached to the Allure report and are also available as workflow artifacts in the Actions run, giving immediate visual context for each failure without having to reproduce it locally.
