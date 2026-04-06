@@ -180,3 +180,5 @@ The latest report is always available at:
 ## Screenshots for failed tests
 
 Failed UI tests automatically capture a browser screenshot at teardown. Screenshots are attached to the Allure report and are also available as workflow artifacts in the Actions run, giving immediate visual context for each failure without having to reproduce it locally.
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/dc109d3e-a013-4870-8ade-3f7844cfe72f" />
+
