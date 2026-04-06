@@ -1,35 +1,33 @@
 *** Settings ***
 Documentation    A resource file with reusable keywords and variables.
-Library    SeleniumLibrary    run_on_failure=Nothing
-Library    Collections
-Library    OperatingSystem
-Library    Process
-Library    ../CustomLibraries/AllureHelper.py
+Library          SeleniumLibrary    run_on_failure=Nothing
+Library          Collections
+Library          OperatingSystem
+Library          Process
+Library          ../CustomLibraries/AllureHelper.py
 
 *** Variables ***
-${user_name}           berk
-${invalid_password}    12345
-${valid_username}      rahulshettyacademy
-${valid_password}      Learning@830$3mK2
-${url}                 https://rahulshettyacademy.com/loginpagePractise/
-${browser}             chrome
+${user_name}          berk
+${invalid_password}   12345
+${valid_username}     rahulshettyacademy
+${valid_password}     Learning@830$3mK2
+${url}                https://rahulshettyacademy.com/loginpagePractise/
+${browser}            chrome
 
 *** Keywords ***
 Open the browser with the url
-    Open Browser    ${url}    ${browser}
+    Open Browser               ${url}    ${browser}
     Maximize Browser Window
-    Set Screenshot Directory    ${EXECDIR}${/}results${/}screenshots
+    Set Screenshot Directory   ${EXECDIR}${/}allure-results
 
 Wait until element passed is located
     [Arguments]    ${locator}
     Wait Until Element Is Visible    ${locator}
 
-Capture Screenshot For Failed Test
-    Run Keyword If Test Failed    Run Keyword And Ignore Error    Capture And Attach Screenshot
-
-Capture And Attach Screenshot
-    ${path}=    Capture Page Screenshot
-    Run Keyword And Ignore Error    Attach Screenshot    ${path}    Failure Screenshot
+UI Test Teardown
+    Run Keyword If Test Failed    Capture And Attach Screenshot    Failure Screenshot
+    Run Keyword And Ignore Error  Close Browser
+    Remove geckodriver logs
 
 Remove geckodriver logs
     ${status}    ${files}=    Run Keyword And Ignore Error
@@ -52,7 +50,3 @@ Close Popup With Retry
         Sleep    1s
     END
     Fail    Popup was still visible after 3 attempts
-
-UI Test Teardown
-    Capture Screenshot For Failed Test
-    Close Browser
