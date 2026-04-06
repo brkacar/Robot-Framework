@@ -24,6 +24,8 @@ Wait until element passed is located
     [Arguments]    ${locator}
     Wait Until Element Is Visible    ${locator}
 
+*** Keywords ***
+
 UI Test Teardown
     Run Keyword If Test Failed    Capture And Attach Screenshot    Failure Screenshot
     Run Keyword And Ignore Error  Close Browser
@@ -50,3 +52,4 @@ Close Popup With Retry
         Sleep    1s
     END
     Fail    Popup was still visible after 3 attempts
+

@@ -3,6 +3,7 @@ Documentation    Validate the login form
 Library    SeleniumLibrary
 Test Teardown    UI Test Teardown
 Test Template    Validate Unsuccessful Login
+Resource        ../Pages/Generic.robot
 
 *** Variables ***
 ${Error_Message_Login}    css=.alert-danger
