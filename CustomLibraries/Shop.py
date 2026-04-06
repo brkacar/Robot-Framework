@@ -24,10 +24,22 @@ class Shop:
                     "15s", "1s", "Click Button", btn_locator
                 )
 
-        # Click the cart icon to proceed to checkout
-        cart_locator = "css:img[alt='Cart']"
-        self.seleniumLib.wait_until_element_is_visible(cart_locator, "15s")
-        self.seleniumLib.scroll_element_into_view(cart_locator)
-        self.builtin.wait_until_keyword_succeeds(
-            "15s", "2s", "Click Element", cart_locator
-        )
+        # Click the cart/checkout link - try multiple locators for robustness
+        cart_locators = [
+            "xpath://a[.//img[@alt='Cart']]",
+            "xpath://a[contains(@href,'#') and .//img]",
+            "css:a img[alt='Cart']",
+            "css:img[alt='Cart']",
+        ]
+        clicked = False
+        for locator in cart_locators:
+            try:
+                self.seleniumLib.wait_until_element_is_visible(locator, "5s")
+                self.seleniumLib.scroll_element_into_view(locator)
+                self.seleniumLib.click_element(locator)
+                clicked = True
+                break
+            except Exception:
+                continue
+        if not clicked:
+            raise AssertionError("Could not find or click the cart icon to proceed to checkout")
