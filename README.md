@@ -1,7 +1,6 @@
 # Robot Framework Test Suite
 
 A comprehensive Robot Framework automation project covering UI (web) testing, API testing, the Page Object Model, data-driven testing, parallel execution with pabot, and custom Python libraries. Built with SeleniumLibrary and RequestsLibrary targeting real-world web applications.
-
 ## Features
 
 - **UI automation** with SeleniumLibrary across multiple browsers.
@@ -168,6 +167,8 @@ Library    ../CustomLibraries/MyLibrary.py
 Tests run automatically on every push and pull request via GitHub Actions. The workflow installs all dependencies, executes the full Robot Framework suite, captures screenshots for any failed UI tests, and uploads the standard Robot reports (`log.html`, `report.html`, `output.xml`) as run artifacts.
 
 If some tests fail but the pipeline itself completes successfully, the workflow still finishes and produces all artifacts, so failures can be reviewed without rerunning the suite locally.
+
+Once the run completes, all Robot Framework reports (`log.html`, `report.html`, `output.xml`) are available to download as a **ZIP file** from the **Artifacts** section at the bottom of the Actions run summary page.
 
 ## Allure report
 
