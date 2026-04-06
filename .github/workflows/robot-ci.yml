@@ -155,8 +155,8 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- [Open latest Allure report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/)" >> $GITHUB_STEP_SUMMARY
           echo "- [Download Allure HTML artifact](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
-          echo "- API test exit code: ${{ steps.api_tests.outputs.exit_code }}" >> $GITHUB_STEP_SUMMARY
-          echo "- UI test exit code: ${{ steps.ui_tests.outputs.exit_code }}" >> $GITHUB_STEP_SUMMARY
+          echo "- ${{ steps.api_tests.outputs.exit_code }} API tests failed." >> $GITHUB_STEP_SUMMARY
+          echo "- ${{ steps.ui_tests.outputs.exit_code }} UI tests failed." >> $GITHUB_STEP_SUMMARY
 
       - name: Fail job if tests failed
         if: always()

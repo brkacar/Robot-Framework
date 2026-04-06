@@ -50,3 +50,5 @@ class AllureHelper:
             self.attach_screenshot(path, name)
         except Exception:
             pass
+
+
