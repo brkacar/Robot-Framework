@@ -4,7 +4,7 @@ Library    SeleniumLibrary
 Library    String
 Library    Collections
 Test Setup        Open the browser with the url
-Test Teardown    Close Browser
+Test Teardown    UI Test Teardown
 Resource        ../Pages/Generic.robot
 
 *** Variables ***

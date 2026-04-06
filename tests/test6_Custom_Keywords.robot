@@ -4,7 +4,7 @@ Library    SeleniumLibrary
 Library    Collections
 Library    ../CustomLibraries/Shop.py
 Test Setup        Open the browser with the url
-Test Teardown    Run Keywords    Close Browser    Remove geckodriver logs
+Test Teardown    Run Keywords    Close Browser    Remove geckodriver logs    Capture Screenshot For Failed Test
 Resource        ../Pages/Generic.robot
 
 *** Variables ***

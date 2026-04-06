@@ -2,7 +2,7 @@
 Documentation    Validate the login form
 Library    SeleniumLibrary
 Library    DataDriver    file=resources/data.csv    encoding=utf_8    dialect=unix
-Test Teardown    Close Browser
+Test Teardown    UI Test Teardown
 Test Template    Validate Unsuccessful Login
 Resource        ../Pages/Generic.robot
 

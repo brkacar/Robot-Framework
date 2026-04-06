@@ -1,13 +1,10 @@
 *** Settings ***
-Documentation    A resource file with resusable keywords and variables.
-...
-...              The system specific keyword created here form the domain specific language.
-...              They utilize the imported SeleniumLibrary.
-Library    SeleniumLibrary
+Documentation    A resource file with reusable keywords and variables.
+Library    SeleniumLibrary    run_on_failure=Nothing
 Library    Collections
 Library    OperatingSystem
 Library    Process
-
+Library    ../CustomLibraries/AllureHelper.py
 
 *** Variables ***
 ${user_name}           berk
@@ -17,27 +14,26 @@ ${valid_password}      Learning@830$3mK2
 ${url}                 https://rahulshettyacademy.com/loginpagePractise/
 ${browser}             chrome
 
-
 *** Keywords ***
-
-#Open the browser with the Mortgage payment url
-##    Create Webdriver    Chrome
-##    Go to    ${url}
-#    Open Browser    ${url}    ${browser}    options=add_experimental_option("detach",True)
-
 Open the browser with the url
     Open Browser    ${url}    ${browser}
     Maximize Browser Window
     Set Screenshot Directory    ${EXECDIR}${/}results${/}screenshots
 
-wait until element passed is located
+Wait until element passed is located
     [Arguments]    ${locator}
     Wait Until Element Is Visible    ${locator}
+
+Capture Screenshot For Failed Test
+    Run Keyword If Test Failed    Run Keyword And Ignore Error    Capture And Attach Screenshot
+
+Capture And Attach Screenshot
+    ${path}=    Capture Page Screenshot
+    Run Keyword And Ignore Error    Attach Screenshot    ${path}    Failure Screenshot
 
 Remove geckodriver logs
     ${status}    ${files}=    Run Keyword And Ignore Error
     ...    List Files In Directory    .    pattern=*geckodriver*.log
-
     IF    '${status}' == 'PASS'
         FOR    ${file}    IN    @{files}
             Run Keyword And Ignore Error    Remove File    ${file}
@@ -56,3 +52,7 @@ Close Popup With Retry
         Sleep    1s
     END
     Fail    Popup was still visible after 3 attempts
+
+UI Test Teardown
+    Capture Screenshot For Failed Test
+    Close Browser

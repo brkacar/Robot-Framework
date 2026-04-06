@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation    Validate the login form
 Library    SeleniumLibrary
-Test Teardown    Close Browser
+Test Teardown    UI Test Teardown
 Test Template    Validate Unsuccessful Login
 
 *** Variables ***
