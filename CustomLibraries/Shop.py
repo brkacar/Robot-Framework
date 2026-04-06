@@ -18,10 +18,5 @@ class Shop:
 
             i = i + 1
 
-        # Click the cart icon (img with alt='Cart') to proceed to checkout
-        cart_locator = "css:img[alt='Cart']"
-        self.seleniumLib.wait_until_element_is_visible(cart_locator, "15s")
-        self.seleniumLib.scroll_element_into_view(cart_locator)
-        self.builtin.wait_until_keyword_succeeds(
-            "15s", "2s", "Click Element", cart_locator
-        )
+        # Click the checkout
+        self.seleniumLib.click_link("css:li.active a")
